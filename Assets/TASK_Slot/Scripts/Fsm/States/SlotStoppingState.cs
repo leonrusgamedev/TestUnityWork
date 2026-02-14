@@ -1,6 +1,5 @@
 ﻿using AxGrid;
 using AxGrid.FSM;
-using AxGrid.Model;
 using Rusleo.TestTask.Core;
 using Rusleo.TestTask.Utils;
 
@@ -25,9 +24,8 @@ namespace Rusleo.TestTask.Fsm.States
                 return;
             }
 
-            // Settings.Model.EventManager.Invoke(SlotEvents.SlotStopping,
-            //     WeightRandomItemUtil.GetRandomItem(slots.Items));
-            Settings.Model.EventManager.Invoke(SlotEvents.SlotStopping,slots.Items[0]);
+            Settings.Model.EventManager.Invoke(SlotEvents.SlotStopping,
+                WeightRandomItemUtil.GetRandomItem(slots.Items));
         }
         
         private void OnResult()

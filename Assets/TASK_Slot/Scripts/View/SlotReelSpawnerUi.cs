@@ -5,6 +5,7 @@ using AxGrid.Base;
 using Rusleo.TestTask.Core;
 using Rusleo.TestTask.Utils;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Rusleo.TestTask.View
 {
@@ -25,6 +26,10 @@ namespace Rusleo.TestTask.View
         [Header("Pool")] [SerializeField] private int poolSize = 7;
 
         [Header("Offsets")] [SerializeField] private float cellsOffset = 5f;
+
+        public UnityEvent onStart = new();
+        public UnityEvent onStopping = new();
+        public UnityEvent onStop = new();
 
         private readonly List<SlotCellView> _cells = new();
 
@@ -97,6 +102,7 @@ namespace Rusleo.TestTask.View
 
             _isStopping = false;
             _spinCoroutine = StartCoroutine(SpinUpAndLoopRoutine());
+            onStart.Invoke();
         }
 
         private void OnSlotStopRequested(params object[] args)
@@ -118,7 +124,10 @@ namespace Rusleo.TestTask.View
             }
 
             if (_brakeCoroutine == null)
+            {
                 _brakeCoroutine = StartCoroutine(BrakeRoutine(_targetItem));
+                onStopping.Invoke();
+            }
         }
 
         #endregion
@@ -182,10 +191,14 @@ namespace Rusleo.TestTask.View
                 yield return null;
             }
 
+            if (cell)
+                cell.PlayWin();
+
             _brakeCoroutine = null;
 
             _isStopping = false;
             Settings.Model.EventManager.Invoke(SlotEvents.SlotResult);
+            onStop.Invoke();
         }
 
         private void StopAllRoutinesHard()
@@ -237,6 +250,7 @@ namespace Rusleo.TestTask.View
                     prewarmOffset ??= cell.RectTransform.anchoredPosition.y;
 
                 cell.SetItem(WeightRandomItemUtil.GetRandomItem(_config.Items));
+                cell.gameObject.name += "_" + i;
                 _cells.Insert(0, cell);
             }
 
@@ -253,6 +267,7 @@ namespace Rusleo.TestTask.View
 
                 if (cell.RectTransform.anchoredPosition.y >= despawnPoint.anchoredPosition.y)
                     continue;
+                
 
                 var top = _cells[0];
                 cell.RectTransform.anchoredPosition =
@@ -264,44 +279,7 @@ namespace Rusleo.TestTask.View
 
                 _cells.RemoveAt(i);
                 _cells.Insert(0, cell);
-
-                i--;
             }
-        }
-
-        #endregion
-
-        #region HelpMethods
-
-        private void ApplyDeltaToAll(float delta)
-        {
-            if (Mathf.Abs(delta) <= 0.0001f)
-                return;
-
-            for (var i = 0; i < _cells.Count; i++)
-            {
-                var rt = _cells[i].RectTransform;
-                rt.anchoredPosition = new Vector2(rt.anchoredPosition.x, rt.anchoredPosition.y + delta);
-            }
-        }
-
-        private SlotCellView GetClosestCellToY(float y)
-        {
-            SlotCellView best = null;
-            var bestD = float.PositiveInfinity;
-
-            for (var i = 0; i < _cells.Count; i++)
-            {
-                var c = _cells[i];
-                var d = Mathf.Abs(c.RectTransform.anchoredPosition.y - y);
-                if (d < bestD)
-                {
-                    bestD = d;
-                    best = c;
-                }
-            }
-
-            return best;
         }
 
         #endregion

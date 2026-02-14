@@ -164,6 +164,7 @@ GameObject:
   - component: {fileID: 8839398886468613427}
   - component: {fileID: 1936031212328935277}
   - component: {fileID: 1936031212328935276}
+  - component: {fileID: 3936758384905710484}
   m_Layer: 5
   m_Name: SlotCellPrefab
   m_TagString: Untagged
@@ -207,6 +208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 1936031212328935267}
   icon: {fileID: 1936031211557850184}
+  animatorBehaviour: {fileID: 3936758384905710484}
 --- !u!222 &1936031212328935277
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -245,3 +247,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 2
+--- !u!114 &3936758384905710484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1936031212328935266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40a76738fb594870aff2fc29830764ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 1936031211557850191}
+  duration: 0.5
+  peakScale: 1.18

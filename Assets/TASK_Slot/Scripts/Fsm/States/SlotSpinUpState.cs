@@ -1,7 +1,6 @@
 ﻿using AxGrid;
 using AxGrid.FSM;
 using Rusleo.TestTask.Core;
-using UnityEngine;
 
 namespace Rusleo.TestTask.Fsm.States
 {
